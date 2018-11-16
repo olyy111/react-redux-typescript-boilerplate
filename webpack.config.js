@@ -10,6 +10,24 @@ var outPath = path.join(__dirname, './build');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+var tsImportPluginFactory = require('ts-import-plugin');
+var syntax = require('postcss-less');
+
+const postcssOptions = {
+  plugins: loader => [
+    require('postcss-import')({ addDependencyTo: webpack }),
+    require('postcss-url')(),
+    require('postcss-preset-env')({
+      /* use stage 2 features (defaults) */
+      stage: 2,
+    }),
+    require('postcss-reporter')(),
+    require('postcss-browser-reporter')({
+      disabled: isProduction
+    })
+  ],
+};
+const projectPath = path.resolve('src');
 
 module.exports = {
   context: sourcePath,
@@ -39,9 +57,28 @@ module.exports = {
         use: [
           !isProduction && {
             loader: 'babel-loader',
-            options: { plugins: ['react-hot-loader/babel'] }
+            options: {
+              plugins: [
+                'react-hot-loader/babel'
+              ]
+            }
           },
-          'ts-loader'
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+              getCustomTransformers: () => ({
+                before: [ tsImportPluginFactory({
+                  libraryName: 'antd',
+                  libraryDirectory: 'es',
+                  style: true,
+                }) ]
+              }),
+              compilerOptions: {
+                module: 'es2015'
+              }
+            }
+          }
         ].filter(Boolean)
       },
       // css
@@ -60,23 +97,30 @@ module.exports = {
           },
           {
             loader: 'postcss-loader',
-            options: {
-              ident: 'postcss',
-              plugins: [
-                require('postcss-import')({ addDependencyTo: webpack }),
-                require('postcss-url')(),
-                require('postcss-preset-env')({
-                  /* use stage 2 features (defaults) */
-                  stage: 2,
-                }),
-                require('postcss-reporter')(),
-                require('postcss-browser-reporter')({
-                  disabled: isProduction
-                })
-              ]
-            }
+            options: postcssOptions
           }
         ]
+      },
+      // Rules for Ant-Design
+      {
+        test: /\.less$/,
+        use: [
+          MiniCssExtractPlugin.loader, // replaces extract text plugin in webpack 4
+          `css-loader`,
+          {loader: 'postcss-loader', options: postcssOptions},
+          {loader: 'less-loader', options: { javascriptEnabled: true }},
+        ],
+        include: [/[\\/]node_modules[\\/].*antd/],
+      },
+      {
+        test: /\.less$/,
+        use: [
+          MiniCssExtractPlugin.loader, // replaces extract text plugin in webpack 4
+          `css-loader?modules&importLoaders=1&localIdentName=[local]_[hash:base64:5]&-autoprefixer`,
+          {loader: 'postcss-loader', options: postcssOptions},
+          {loader: 'less-loader', options: { javascriptEnabled: true }},
+        ],
+        include: [projectPath],
       },
       // static assets
       { test: /\.html$/, use: 'html-loader' },

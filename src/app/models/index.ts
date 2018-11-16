@@ -1,1 +1,2 @@
-export * from './TodoModel';
+export { CommonModel } from './CommonModel'
+export { DemoModel } from './DemoModel'
