@@ -1,0 +1,18 @@
+/*
+ *
+ * {{ properCase name }} actions
+ *
+ */
+
+
+import { createAction } from 'redux-actions';
+
+export namespace {{ camelCase name }}Actions {
+  export enum Type {
+    DEFAULT_ACTION = 'DEFAULT_ACTION'
+  }
+
+  export const defaultAction = createAction(Type.DEFAULT_ACTION);
+}
+
+export type {{ camelCase name }}Actions = Omit<typeof {{ camelCase name }}Actions, 'Type'>;

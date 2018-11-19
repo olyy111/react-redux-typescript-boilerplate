@@ -1,0 +1,30 @@
+/**
+ *
+ * {{ properCase name }}
+ *
+ */
+
+import * as React from 'react';
+{{#if wantCSS}}
+import * as styles from './style.css';
+{{/if}}
+
+export namespace {{ properCase name }} {
+  export interface Props { }
+}
+
+class {{ properCase name }} extends React.Component<{{ properCase name }}.Props, any> {
+  public render() {
+    return (
+      {{#if wantCSS}}
+      <div className={{curly true}}styles.{{ camelCase name }}{{curly}}>
+      {{else}}
+      <div>
+      {{/if}}
+        Hello World!
+      </div>
+    );
+  }
+}
+
+export default {{ properCase name }};

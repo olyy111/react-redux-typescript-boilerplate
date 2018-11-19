@@ -1,0 +1,10 @@
+import { {{ camelCase name }}Actions } from '../actions/{{ camelCase name }}'
+import { takeEvery, call, put } from 'redux-saga/effects'
+
+function* defaultSaga(action: any):IterableIterator<any> {
+  return;
+}
+
+export default function* watchFetchData() {
+  yield takeEvery({{ camelCase name }}Actions.Type.DEFAULT_ACTION, defaultSaga)
+}

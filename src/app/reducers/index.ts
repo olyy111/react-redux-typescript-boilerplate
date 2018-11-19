@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { RootState } from './RootState';
 import { demoReducer } from './demo';
 import { commonReducer } from './common'
+/* PREPEND IMPORT HERE */
 
 export { RootState };
 
@@ -10,4 +11,5 @@ export { RootState };
 export const rootReducer = combineReducers<RootState>({
   demo: demoReducer as any,
   common: commonReducer as any,
+  /* PREPEND ATTR HERE */
 });

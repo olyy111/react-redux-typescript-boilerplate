@@ -1,0 +1,22 @@
+/*
+ *
+ * {{ properCase name }} reducer
+ *
+ */
+
+import { handleActions } from 'redux-actions';
+import { RootState } from './RootState';
+import { {{ camelCase name }}Actions } from 'app/actions/{{ camelCase name }}';
+import { {{ properCase name }}Model } from 'app/models/{{properCase name }}Model'
+
+
+const initialState: RootState.{{ properCase name }}State = {};
+
+export const {{ camelCase name }}Reducer = handleActions<RootState.{{ properCase name }}State, {{ properCase name }}Model>(
+  {
+    [{{ camelCase name }}Actions.Type.DEFAULT_ACTION]: (state, action) => {
+      return state;
+    },
+  },
+  initialState
+);

@@ -1,0 +1,25 @@
+/**
+*
+* {{ properCase name }}
+*
+*/
+
+import * as React from 'react';
+{{#if wantCSS}}
+import * as styles from './style.css';
+{{/if}}
+
+
+const {{ properCase name }}: React.SFC<any> = (props) => {
+  return (
+    {{#if wantCSS}}
+    <div className={{curly true}}styles.{{ camelCase name }}{{curly}}>
+    {{else}}
+    <div>
+    {{/if}}
+      Hello World!
+    </div>
+  );
+}
+
+export default {{ properCase name }};

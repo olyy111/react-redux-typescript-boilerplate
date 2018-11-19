@@ -1,0 +1,61 @@
+/*
+ *
+ * {{properCase name }}
+ *
+ */
+
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { RootState } from "app/reducers";
+import { bindActionCreators, Dispatch } from 'redux';
+import { omit } from "app/utils";
+import { {{ camelCase name }}Actions } from "app/actions";
+// import { {{properCase name }}Model } from 'app/models';
+import { RouteComponentProps } from "react-router";
+
+
+export namespace {{properCase name }} {
+  export interface Props extends RouteComponentProps<void> {
+    {{ camelCase name }}: RootState.{{properCase name }}State;
+    actions: {{ camelCase name }}Actions;
+  }
+}
+
+{{#if wantActionsAndReducer}}
+@connect(
+  (state: RootState, ownProps): any/* RootState.{{ camelCase name }}State */ => {
+    return { {{ camelCase name }}: state.{{ camelCase name }} };
+  },
+  (dispatch: Dispatch): any => ({
+    actions: bindActionCreators(omit({{ camelCase name }}Actions, 'Type'), dispatch)
+  })
+)
+{{/if}}
+export default class {{properCase name }} extends React.Component<{{properCase name }}.Props>{
+  constructor(props: {{properCase name }}.Props){
+    super(props)
+  }
+  render(){
+    return <div>Hello World!</div>
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
