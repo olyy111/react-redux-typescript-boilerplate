@@ -32,6 +32,11 @@ module.exports = {
     name: 'wantSagas',
     default: true,
     message: 'Do you want sagas for asynchronous flows? (e.g. fetching data)',
+  }, {
+    type: 'confirm',
+    name: 'wantLoadable',
+    default: true,
+    message: 'Do you want to load resources asynchronously?',
   }],
   actions: (data) => {
     let actions = [{
@@ -39,11 +44,6 @@ module.exports = {
       path: '../../src/app/containers/{{properCase name}}/index.tsx',
       templateFile: './container/index.tsx.hbs',
       abortOnFail: true,
-    }, {
-      type: 'modify',
-      path: '../../src/app/index.tsx',
-      pattern: /(\/\* PREPEND IMPORT HERE \*\/)/gi,
-      template: 'import {{properCase name}} from \'app/containers/{{properCase name}}/index.tsx\';\r\n$1'
     }, {
       type: 'add',
       path: '../../src/app/models/{{properCase name}}Model.ts',
@@ -65,6 +65,34 @@ module.exports = {
         abortOnFail: true,
       });
     }
+
+    if (data.wantLoadable) {
+      actions.push({
+        type: 'add',
+        path: '../../src/app/containers/{{properCase name}}/Loadable.ts',
+        templateFile: './container/loadable.ts.hbs',
+        abortOnFail: true,
+      });
+      actions.push({
+        type: 'modify',
+        path: '../../src/app/index.tsx',
+        pattern: /(\/\* PREPEND IMPORT HERE \*\/)/gi,
+        template: 'import {{properCase name}} from \'app/containers/{{properCase name}}/Loadable.ts\';\r\n$1'
+      })
+    } else {
+      actions.push({
+        type: 'modify',
+        path: '../../src/app/index.tsx',
+        pattern: /(\/\* PREPEND IMPORT HERE \*\/)/gi,
+        template: 'import {{properCase name}} from \'app/containers/{{properCase name}}/index.tsx\';\r\n$1'
+      })
+    }
+    actions.push({
+      type: 'modify',
+      path: '../../src/app/index.tsx',
+      pattern: /(\/\* PREPEND ITEM HERE \*\/)/gi,
+      template: '<Route path="/{{camelCase name}}" component=\{ {{properCase name}} \} />\r\n  $1'
+    })
 
     // If they want actions and a reducer, generate actions.js, constants.js,
     // reducer.js and the corresponding tests for actions and the reducer
